@@ -10,7 +10,7 @@ Credit
   <strong>📌 Credit to c0depool</strong>  
   I want to give full credit and express my gratitude to the original author, c0depool, whose repository at <a href="https://github.com/c0depool/c0depool-iac">https://github.com/c0depool/c0depool-iac</a> served as the foundation for this project. I have modified and will continue to adapt it as I refine my Talos/Kubernetes setup. Thank you.
 </div>
-
+```
 ### Prepare the Workstation
 
 #### Install Packer
