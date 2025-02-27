@@ -301,12 +301,29 @@ Your ingress-nginx now has an external IP 10.10.6.101 and all your ingress resou
 
 Since we have multiple kubernetes nodes, it is essential to have a distributed storage solution. While there are many solutions available like Rook-Ceph, Mayastor etc., I was already using Longhorn with my K3s cluster where I have all my applications backed up. Luckily Longhorn now supports Talos. In the Talos configuration, I have added an extraMount for the longhorn volume. Let us install Longhorn and use the volume as our disk.
 
+- Create and Label the Namespace: Allow privileged Pods in longhorn-system
+
+```bash
+kubectl create namespace longhorn-system
+kubectl label namespace longhorn-system pod-security.kubernetes.io/enforce=privileged --overwrite
+kubectl label namespace longhorn-system pod-security.kubernetes.io/enforce-version=latest --overwrite
+```
+
 ```bash
 helm repo add longhorn https://charts.longhorn.io
 helm repo update
 helm install longhorn longhorn/longhorn \
   --namespace longhorn-system \
-  --create-namespace \
-  --version 1.6.2 \
-  --set defaultSettings.defaultDataPath="/var/mnt/longhorn"
+  --version 1.8.0 \
+  --set defaultSettings.defaultDataPath="/var/mnt/longhorn" \
+  --set tolerations[0].key="node-role.kubernetes.io/control-plane" \
+  --set tolerations[0].operator="Exists" \
+  --set tolerations[0].effect="NoSchedule" \
+  --set nodeSelector."node-role.kubernetes.io/worker"="" \
+  --set podSecurityPolicy.enabled=false \
+  --set global.securityContext.runAsNonRoot=false \
+  --set global.securityContext.allowPrivilegeEscalation=true \
+  --set global.securityContext.capabilities.drop=[] \
+  --set global.securityContext.privileged=true \
+  --set global.securityContext.seccompProfile.type=""
 ```
