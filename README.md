@@ -295,8 +295,6 @@ Your ingress-nginx now has an external IP 10.10.6.101 and all your ingress resou
 
 ## Install Longhorn
 
-# Warning
-
 <div style="background-color: #ffcc00; padding: 10px; border: 1px solid #cc0000; border-radius: 5px;">
   <strong>⚠️ NOTE:</strong> This needs some work, I'm unable to get Longhorn running. Need some time to analyze the logs and figure out why it's failing. Will experiment with other chart versions.
 </div>
