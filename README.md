@@ -5,8 +5,8 @@ This guide walks you through preparing your Linux workstation for managing Talos
 ### Credit
 
 <div style="background-color: #ffcc00; padding: 15px; border: 1px solid #cc0000; border-radius: 5px; margin: 15px 0;">
-  <strong>📌 Credit to c0depool</strong>  
-  I want to give full credit and express my gratitude to the original author, c0depool, whose repository at <a href="https://github.com/c0depool/c0depool-iac">https://github.com/c0depool/c0depool-iac</a> served as the foundation for this project. I have modified and will continue to adapt it as I refine my Talos/Kubernetes setup. Thank you.
+  <strong>📌 Credit to c0depool</strong><br>
+  I want to give full credit and express my gratitude to the original author, c0depool, whose repository at <a href="https://github.com/c0depool/c0depool-iac">https://github.com/c0depool/c0depool-iac</a> served as the foundation for me. I have modified and will continue to adapt it as I refine my Talos/Kubernetes setup. Thank you.
 </div>
 
 ### Prepare the Workstation
@@ -253,7 +253,8 @@ kubectl get nodes
 kubectl get pods -A
 ```
 
-Create CiliumLoadBalancerIPPool. For the pool cidr, it is mandatory to select a /30 or wider range so that we get at least 2 IPs after reserving the first and last ones. For eg if we use 10.10.6.100/30, we get 2 usable IPs 10.10.6.101 and 10.10.6.102. I am planning to use only one LoadBalancer service for the ingress controller, so this works for me.
+- Create CiliumLoadBalancerIPPool. 
+For the pool cidr, it is mandatory to select a /30 or wider range so that we get at least 2 IPs after reserving the first and last ones. For eg if we use 10.10.6.100/30, we get 2 usable IPs 10.10.6.101 and 10.10.6.102. I am planning to use only one LoadBalancer service for the ingress controller, so this works for me.
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -303,7 +304,7 @@ Your ingress-nginx now has an external IP 10.10.6.101 and all your ingress resou
 ## Install Longhorn
 
 <div style="background-color: #ffcc00; padding: 10px; border: 1px solid #cc0000; border-radius: 5px;">
-  <strong>⚠️ NOTE:</strong> I think Longhorn is working with the below instructions. Further testing is needed.
+  <strong>⚠️ NOTE:</strong> I think Longhorn is working with the below instructions. Further testing is needed.<br>
 </div>
 
 Since we have multiple kubernetes nodes, it is essential to have a distributed storage solution. While there are many solutions available like Rook-Ceph, Mayastor etc., I was already using Longhorn with my K3s cluster where I have all my applications backed up. Luckily Longhorn now supports Talos. In the Talos configuration, I have added an extraMount for the longhorn volume. Let us install Longhorn and use the volume as our disk.
