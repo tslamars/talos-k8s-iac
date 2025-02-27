@@ -2,15 +2,13 @@
 
 This guide walks you through preparing your Linux workstation for managing Talos Kubernetes infrastructure as code (IaC). Below are the steps to install the required tools: Packer, Terraform, and Talosctl.
 
-### Optional Enhancements
-Credit
+### Credit
 
-```markdown
 <div style="background-color: #ffcc00; padding: 15px; border: 1px solid #cc0000; border-radius: 5px; margin: 15px 0;">
   <strong>📌 Credit to c0depool</strong>  
   I want to give full credit and express my gratitude to the original author, c0depool, whose repository at <a href="https://github.com/c0depool/c0depool-iac">https://github.com/c0depool/c0depool-iac</a> served as the foundation for this project. I have modified and will continue to adapt it as I refine my Talos/Kubernetes setup. Thank you.
 </div>
-```
+
 ### Prepare the Workstation
 
 #### Install Packer
