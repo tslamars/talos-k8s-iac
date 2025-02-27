@@ -296,7 +296,7 @@ Your ingress-nginx now has an external IP 10.10.6.101 and all your ingress resou
 ## Install Longhorn
 
 <div style="background-color: #ffcc00; padding: 10px; border: 1px solid #cc0000; border-radius: 5px;">
-  <strong>⚠️ NOTE:</strong> This needs some work, I'm unable to get Longhorn running. Need some time to analyze the logs and figure out why it's failing. Will experiment with other chart versions.
+  <strong>⚠️ NOTE:</strong> I think Longhorn is working with the below instructions. Further testing is needed.
 </div>
 
 Since we have multiple kubernetes nodes, it is essential to have a distributed storage solution. While there are many solutions available like Rook-Ceph, Mayastor etc., I was already using Longhorn with my K3s cluster where I have all my applications backed up. Luckily Longhorn now supports Talos. In the Talos configuration, I have added an extraMount for the longhorn volume. Let us install Longhorn and use the volume as our disk.
