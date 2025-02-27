@@ -107,7 +107,7 @@ packer validate -var-file="vars/local.pkrvars.hcl" .
 packer build -var-file="vars/local.pkrvars.hcl" .
 ```
 
-#### Create Talos VMs using Terraform
+## Create Talos VMs using Terraform
 
 Create a copy of talos-k8s-iac/terraform/tslamars-talos-cluster/example.credentials.auto.tfvars file as credentials.auto.tfvars and update the Proxmox node details. Delete the example file otherwise Terraform will bark.
 
@@ -118,7 +118,7 @@ rm example.credentials.auto.tfvars
 # Update the file credentials.auto.tfvars
 ```
 
-Open tslamars-k8s-iac/terraform/tslamars-talos-cluster/locals.tf and add/remove the nodes according to your cluster requirements. By default I have 6 nodes: 3 masters and 3 workers. You should at least have one master and one worker. Here is an example configuration:
+Open talos-k8s-iac/terraform/tslamars-talos-cluster/locals.tf and add/remove the nodes according to your cluster requirements. By default I have 6 nodes: 3 masters and 3 workers. You should at least have one master and one worker. Here is an example configuration:
 
 ```
   vm_master_nodes = {
@@ -137,11 +137,178 @@ Open tslamars-k8s-iac/terraform/tslamars-talos-cluster/locals.tf and add/remove 
 #### Run Terraform to provision the servers
 
 ```bash
-cd $HOME/tslamars-k8s-iac/terraform/tslamars-talos-cluster/
+cd $HOME/talos-k8s-iac/terraform/tslamars-talos-cluster/
 # Initialize Terraform
 terraform init
 # Plan
 terraform plan -out .tfplan
 # Apply
 terraform apply .tfplan
+```
+
+## Generating Talos Configuration using Talhelper
+
+- Update talos-k8s-iac/talos/talconfig.yaml according to your needs, add MAC addresses of the Talos nodes under hardwareAddr.
+- Generate Talos secrets
+
+```bash
+cd $HOME/talos-k8s-iac/talos
+talhelper gensecret > talsecret.sops.yaml
+```
+
+- Create Age secret key
+```bash
+mkdir -p $HOME/.config/sops/age/
+age-keygen -o $HOME/.config/sops/age/keys.txt
+```
+
+- In the c0depool-iac/talos directory, create a .sops.yaml with below content
+
+```bash
+---
+creation_rules:
+  - age: <age-public-key> ## get this in the keys.txt file from previous step
+```
+
+- Encrypt Talos secrets with Age and Sops
+
+```bash
+cd $HOME/talos-k8s-iac/talos
+sops -e -i talsecret.sops.yaml
+```
+
+- Generate Talos configuration
+
+```bash
+cd $HOME/talos-k8s-iac/talos
+talhelper genconfig
+```
+
+## Bootsrap Talos
+
+- Apply the corresponding configuration for each of your node from talos-k8s-iac/talos/clusterconfig directory
+
+```bash
+# For master node(s)
+cd $HOME/talos-k8s-iac/talos/
+talosctl apply-config --insecure --nodes <master-node ip> --file clusterconfig/<master-config>.yaml
+# For worker(s)
+talosctl apply-config --insecure --nodes <worker-node ip> --file clusterconfig/<worker-config>.yaml
+```
+
+- Wait for a few minutes for the nodes to reboot. Proceed with bootstrapping Talos
+
+```bash
+cd $HOME/talos-k8s-iac/talos/
+# Copy Talos config to $HOME/.talos/config to avoid using --talosconfig
+mkdir -p $HOME/.talos
+cp clusterconfig/talosconfig $HOME/.talos/config
+# Run the bootstrap command
+# Note: The bootstrap operation should only be called ONCE on a SINGLE control plane/master node (use any one if you have multiple master nodes). 
+talosctl bootstrap -n <master-node ip>
+```
+
+- Generate kubeconfig and save it to your home directory
+
+```bash
+mkdir -p $HOME/.kube
+talosctl -n <master-node ip> kubeconfig $HOME/.kube/config
+```
+
+- Check the status of your nodes. Since we use Cilium for container networking, the nodes might not be in “Ready” state to accept workloads. We can fix it later by installing Cilium.
+
+```bash
+kubectl get nodes
+```
+
+## Install Cilium and L2 Load Balancer
+
+Cilium is an open source, production ready, cloud native networking solution for Kubernetes. Talos by default uses a lightweight networking plugin called Flannel, which works perfectly fine for many. I just wanted to experiment with a production ready and secure networking solution. Additionally, since this is a bare-metal installation, we can make use of Cilium’s L2 aware load balancer to expose the LoadBalancer, as an alternative to MetalLB.
+
+- Install Cilium using the cli
+
+```bash
+cilium install \
+  --helm-set=ipam.mode=kubernetes \
+  --helm-set=kubeProxyReplacement=true \
+  --helm-set=securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" \
+  --helm-set=securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" \
+  --helm-set=cgroup.autoMount.enabled=false \
+  --helm-set=cgroup.hostRoot=/sys/fs/cgroup \
+  --helm-set=l2announcements.enabled=true \
+  --helm-set=externalIPs.enabled=true \
+  --helm-set=devices=eth+
+  ```
+
+- Verify your cluster. Now the nodes should be in “Ready” state
+```bash
+kubectl get nodes
+kubectl get pods -A
+```
+
+Create CiliumLoadBalancerIPPool. For the pool cidr, it is mandatory to select a /30 or wider range so that we get at least 2 IPs after reserving the first and last ones. For eg if we use 10.10.6.100/30, we get 2 usable IPs 10.10.6.101 and 10.10.6.102. I am planning to use only one LoadBalancer service for the ingress controller, so this works for me.
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "cilium-ip-pool"
+spec:
+  blocks:
+  - start: "10.10.6.100"
+    stop: "10.10.6.102"
+EOF
+```
+
+- Create CiliumL2AnnouncementPolicy
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: "cilium-l2-policy"
+spec:
+  interfaces:
+  - eth0
+  externalIPs: true
+  loadBalancerIPs: true
+EOF
+```
+
+- Install Ingress Nginx Controller with an annotation to use the Cilium L2 load balancer IP
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx \
+  --create-namespace \
+  --set controller.externalTrafficPolicy="Local" \
+  --set controller.kind="DaemonSet" \
+  --set controller.service.annotations."io.cilium/lb-ipam-ips"="10.10.6.101"
+# Check if the LB service has the EXTERNAL-IP assigned
+kubectl get svc ingress-nginx-controller -n ingress-nginx
+```
+
+Your ingress-nginx now has an external IP 10.10.6.101 and all your ingress resources will be available via this IP.
+
+## Install Longhorn
+
+# Warning
+
+<div style="background-color: #ffcc00; padding: 10px; border: 1px solid #cc0000; border-radius: 5px;">
+  <strong>⚠️ NOTE:</strong> This needs some work, I'm unable to get Longhorn running. Need some time to analyze the logs and figure out why it's failing. Will experiment with other chart versions.
+</div>
+
+Since we have multiple kubernetes nodes, it is essential to have a distributed storage solution. While there are many solutions available like Rook-Ceph, Mayastor etc., I was already using Longhorn with my K3s cluster where I have all my applications backed up. Luckily Longhorn now supports Talos. In the Talos configuration, I have added an extraMount for the longhorn volume. Let us install Longhorn and use the volume as our disk.
+
+```bash
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
+helm install longhorn longhorn/longhorn \
+  --namespace longhorn-system \
+  --create-namespace \
+  --version 1.6.2 \
+  --set defaultSettings.defaultDataPath="/var/mnt/longhorn"
 ```
