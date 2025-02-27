@@ -116,10 +116,10 @@ packer build -var-file="vars/local.pkrvars.hcl" .
 
 ## Create Talos VMs using Terraform
 
-Create a copy of talos-k8s-iac/terraform/tslamars-talos-cluster/example.credentials.auto.tfvars file as credentials.auto.tfvars and update the Proxmox node details. Delete the example file otherwise Terraform will bark.
+Create a copy of talos-k8s-iac/terraform/k8s-talos-cluster/example.credentials.auto.tfvars file as credentials.auto.tfvars and update the Proxmox node details. Delete the example file otherwise Terraform will bark.
 
 ```bash
-cd $HOME/c0depool-iac/terraform/c0depool-talos-cluster/
+cd $HOME/talos-k8s-iac/terraform/tslamars-talos-cluster/
 cp example.credentials.auto.tfvars credentials.auto.tfvars
 rm example.credentials.auto.tfvars
 # Update the file credentials.auto.tfvars
@@ -169,7 +169,7 @@ mkdir -p $HOME/.config/sops/age/
 age-keygen -o $HOME/.config/sops/age/keys.txt
 ```
 
-- In the c0depool-iac/talos directory, create a .sops.yaml with below content
+- In the tslamars-iac/talos directory, create a .sops.yaml with below content
 
 ```bash
 ---
@@ -318,6 +318,9 @@ kubectl create namespace longhorn-system
 kubectl label namespace longhorn-system pod-security.kubernetes.io/enforce=privileged --overwrite
 kubectl label namespace longhorn-system pod-security.kubernetes.io/enforce-version=latest --overwrite
 ```
+
+### Install Longhorn with Helm
+Grok had recommended the above namespace labels as well as setting the below options during the helm install. The pods all provisioned succesfully after a bit of troubleshooting and testing. It is also worth mentioning that I needed to utilize the Talos Image Factory to use a build with the iscsi-tools system extension before the Longhorn driver deployer would succesfully provision.
 
 ```bash
 helm repo add longhorn https://charts.longhorn.io
