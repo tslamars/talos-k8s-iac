@@ -4,5 +4,5 @@ metadata:
   name: "cilium-ip-pool"
 spec:
   blocks:
-  - start: "10.10.6.100"
-    stop: "10.10.6.102"
+  - start: "10.10.4.100"
+    stop: "10.10.4.102"

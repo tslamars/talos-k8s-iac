@@ -6,8 +6,8 @@ locals {
       node_name      = "talos-master-00"
       clone_target   = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores = "2"
-      node_memory    = 2048
-      node_ipconfig  = "ip=10.10.6.170/21,gw=10.10.0.1"
+      node_memory    = 4096
+      node_ipconfig  = "ip=10.10.4.170/21,gw=10.10.0.1"
       node_disk      = "32" # in GB
     }
     "1" = {
@@ -15,8 +15,8 @@ locals {
       node_name      = "talos-master-01"
       clone_target   = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores = "2"
-      node_memory    = 2048
-      node_ipconfig  = "ip=10.10.6.171/21,gw=10.10.0.1"
+      node_memory    = 4096
+      node_ipconfig  = "ip=10.10.4.171/21,gw=10.10.0.1"
       node_disk      = "32" # in GB
     }
     "2" = {
@@ -24,8 +24,8 @@ locals {
       node_name      = "talos-master-02"
       clone_target   = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores = "2"
-      node_memory    = 2048
-      node_ipconfig  = "ip=10.10.6.172/21,gw=10.10.0.1"
+      node_memory    = 4096
+      node_ipconfig  = "ip=10.10.4.172/21,gw=10.10.0.1"
       node_disk      = "32" # in GB
     }
   }
@@ -36,8 +36,8 @@ locals {
       node_name            = "talos-worker-00"
       clone_target         = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores       = "4"
-      node_memory          = 6144
-      node_ipconfig        = "ip=10.10.6.180/21,gw=10.10.0.1"
+      node_memory          = 8192
+      node_ipconfig        = "ip=10.10.4.180/21,gw=10.10.0.1"
       node_disk            = "32"
       additional_node_disk = "128" # for longhorn
     }
@@ -46,8 +46,8 @@ locals {
       node_name            = "talos-worker-01"
       clone_target         = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores       = "4"
-      node_memory          = 6144
-      node_ipconfig        = "ip=10.10.6.181/21,gw=10.10.0.1"
+      node_memory          = 8192
+      node_ipconfig        = "ip=10.10.4.181/21,gw=10.10.0.1"
       node_disk            = "32"
       additional_node_disk = "128" # for longhorn
     }
@@ -56,8 +56,8 @@ locals {
       node_name            = "talos-worker-02"
       clone_target         = "talos-v1.9.4-cloud-init-template"
       node_cpu_cores       = "4"
-      node_memory          = 6144
-      node_ipconfig        = "ip=10.10.6.182/21,gw=10.10.0.1"
+      node_memory          = 8192
+      node_ipconfig        = "ip=10.10.4.182/21,gw=10.10.0.1"
       node_disk            = "32"
       additional_node_disk = "128" # for longhorn
     }
