@@ -3,7 +3,7 @@
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 talosVersion: v1.9.4
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.32.0
+kubernetesVersion: v1.31.0
 
 clusterName: tslamars-talos-cluster
 endpoint: https://10.10.4.199:6443
@@ -25,7 +25,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "6a:a1:5e:45:67:6e"
+          hardwareAddr: "76:ae:17:a4:bf:a8"
         dhcp: false
         vip:
           ip: 10.10.4.199
@@ -36,7 +36,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "6a:a1:5e:45:67:6e"
+          hardwareAddr: "7e:30:a6:7a:91:f5"
         dhcp: false
         vip:
           ip: 10.10.4.199
@@ -47,7 +47,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "c6:76:c3:17:17:00"
+          hardwareAddr: "32:ed:9d:37:f6:e2"
         dhcp: false
         vip:
           ip: 10.10.4.199
@@ -58,7 +58,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "ca:f5:cb:81:c6:ab"
+          hardwareAddr: "ae:1b:94:30:cd:fc"
         dhcp: false
     patches:
       - |-
@@ -75,7 +75,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "76:33:d1:05:84:ac"
+          hardwareAddr: "ee:e8:46:66:80:c8"
         dhcp: false
   - hostname: talos-worker-02
     controlPlane: false
@@ -84,7 +84,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "da:d2:41:c1:6b:fe"
+          hardwareAddr: "2a:36:de:48:97:2a"
         dhcp: false
 
 patches:

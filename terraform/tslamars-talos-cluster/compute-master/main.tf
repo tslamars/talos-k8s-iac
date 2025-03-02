@@ -42,7 +42,7 @@ resource "proxmox_vm_qemu" "c0depool-talos" {
                     size = var.nodes[count.index].node_disk
                     format    = "raw"
                     iothread  = true
-                    backup    = false
+                    backup    = true
                     storage   = "zfsssd"
                 }
             }
