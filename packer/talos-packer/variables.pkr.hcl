@@ -43,5 +43,5 @@ variable "base_iso_file" {
 }
 
 locals {
-  image = "https://factory.talos.dev/image/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586/${var.talos_version}/nocloud-amd64.raw.xz"
+  image = "https://factory.talos.dev/image/88d1f7a5c4f1d3aba7df787c448c1d3d008ed29cfb34af53fa0df4336a56040b/${var.talos_version}/nocloud-amd64.raw.xz"
 }

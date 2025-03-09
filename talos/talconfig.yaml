@@ -6,59 +6,59 @@ talosVersion: v1.9.4
 kubernetesVersion: v1.31.0
 
 clusterName: tslamars-talos-cluster
-endpoint: https://10.10.4.199:6443
+endpoint: https://10.10.5.199:6443
 clusterPodNets:
   - 10.14.0.0/16
 clusterSvcNets:
   - 10.15.0.0/16
 additionalApiServerCertSans:
-  - 10.10.4.199
+  - 10.10.5.199
   - 127.0.0.1
 additionalMachineCertSans:
-  - 10.10.4.199
+  - 10.10.5.199
   - 127.0.0.1
 nodes:
-  - hostname: talos-master-00
+  - hostname: talos-marsmaster-00
     controlPlane: true
-    ipAddress: 10.10.4.170
+    ipAddress: 10.10.5.170
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "76:ae:17:a4:bf:a8"
+          hardwareAddr: "e6:04:7c:d2:d9:58"
         dhcp: false
         vip:
-          ip: 10.10.4.199
-  - hostname: talos-master-01
+          ip: 10.10.5.199
+  - hostname: talos-marsmaster-01
     controlPlane: true
-    ipAddress: 10.10.4.171
+    ipAddress: 10.10.5.171
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "7e:30:a6:7a:91:f5"
+          hardwareAddr: "ea:52:ce:62:1b:f6"
         dhcp: false
         vip:
-          ip: 10.10.4.199
-  - hostname: talos-master-02
+          ip: 10.10.5.199
+  - hostname: talos-marsmaster-02
     controlPlane: true
-    ipAddress: 10.10.4.172
+    ipAddress: 10.10.5.172
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "32:ed:9d:37:f6:e2"
+          hardwareAddr: "76:81:1e:b1:10:18"
         dhcp: false
         vip:
-          ip: 10.10.4.199
-  - hostname: talos-worker-00
+          ip: 10.10.5.199
+  - hostname: talos-marsworker-00
     controlPlane: false
-    ipAddress: 10.10.4.180
+    ipAddress: 10.10.5.180
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "ae:1b:94:30:cd:fc"
+          hardwareAddr: "0e:16:b5:49:7c:91"
         dhcp: false
     patches:
       - |-
@@ -68,23 +68,23 @@ nodes:
               - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
               - SUBSYSTEM=="drm", KERNEL=="card*", GROUP="44", MODE="0660"
 
-  - hostname: talos-worker-01
+  - hostname: talos-marsworker-01
     controlPlane: false
-    ipAddress: 10.10.4.181
+    ipAddress: 10.10.5.181
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "ee:e8:46:66:80:c8"
+          hardwareAddr: "f6:7f:d4:18:32:e4"
         dhcp: false
-  - hostname: talos-worker-02
+  - hostname: talos-marsworker-02
     controlPlane: false
-    ipAddress: 10.10.4.182
+    ipAddress: 10.10.5.182
     installDisk: /dev/sda
     talosImageURL: factory.talos.dev/installer/dc7b152cb3ea99b821fcb7340ce7168313ce393d663740b791c36f6e95fc8586
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "2a:36:de:48:97:2a"
+          hardwareAddr: "9a:be:68:9c:fa:56"
         dhcp: false
 
 patches:

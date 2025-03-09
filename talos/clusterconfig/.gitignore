@@ -5,3 +5,9 @@ tslamars-talos-cluster-talos-worker-00.yaml
 tslamars-talos-cluster-talos-worker-01.yaml
 tslamars-talos-cluster-talos-worker-02.yaml
 talosconfig
+tslamars-talos-cluster-talos-marsmaster-00.yaml
+tslamars-talos-cluster-talos-marsmaster-01.yaml
+tslamars-talos-cluster-talos-marsmaster-02.yaml
+tslamars-talos-cluster-talos-marsworker-00.yaml
+tslamars-talos-cluster-talos-marsworker-01.yaml
+tslamars-talos-cluster-talos-marsworker-02.yaml
