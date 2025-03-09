@@ -40,3 +40,4 @@ kubernetes
 .vscode
 packer/talos-packer/vars/local.pkrvars.hcl
 terraform/tslamars-talos-cluster/credentials.auto.tfvars
+terraform/tslamars-talos-cluster-2/credentials.auto.tfvars
